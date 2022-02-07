@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 export default function Wood(props) {
@@ -26,41 +26,50 @@ export default function Wood(props) {
     }
     setRoomListTo(newRoomList);
   }, [noOfRooms]);
-
+  const refContainer = useRef(null);
   return Object.keys(roomList).map((key) => {
     const room = roomList[key];
-
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      console.log(refContainer.current.value);
+    };
     return (
-      <div key={key}>
-        <input
-          type="text"
-          name="room_name"
-          value={room.name}
-          onChange={(e) => {
-            setRoomListTo({
-              ...roomList,
-              name: e.target.value,
-            });
-          }}
-        />
-        <input
-          type="text"
-          name="sqft"
-          value={room.sqft}
-          onChange={(e) => {
-            setRoomListTo({
-              ...roomList,
-              sqft: e.target.value,
-            });
-          }}
-        />
-        <select name="floor_type" id="floor_type">
-          <option value="tile">tile</option>
-          <option value="carpet">carpet</option>
-          <option value="hardwood">hardwood</option>
-          <option value="vinyl">vinyl</option>
-        </select>
-      </div>
+      <>
+        <form onSubmit={handleSubmit} key={key}>
+          <div>
+            <input
+              ref={refContainer}
+              type="text"
+              name="room_name"
+              value={room.name}
+              onChange={(e) => {
+                setRoomListTo({
+                  ...roomList,
+                  name: e.target.name,
+                });
+              }}
+            />
+            <input
+              type="text"
+              name="sqft"
+              value={room.sqft}
+              onChange={(e) => {
+                setRoomListTo({
+                  ...roomList,
+                  sqft: e.target.value,
+                });
+              }}
+            />
+            <select name="floor_type" id="floor_type">
+              <option value="tile">tile</option>
+              <option value="carpet">carpet</option>
+              <option value="hardwood">hardwood</option>
+              <option value="vinyl">vinyl</option>
+            </select>
+            <button type="submit">Get Subtotal</button>
+          </div>
+        </form>
+      </>
     );
   });
 }
