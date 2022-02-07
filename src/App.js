@@ -1,25 +1,37 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import {
+  Routes,
+  Route,
+  Link,
+  useRouteMatch,
+  useParams,
+} from 'react-router-dom';
 import './App.css';
+import Detail from './Detail';
+import Estimator from './Estimator';
+import Wood from './Wood';
 
-function App() {
+export default function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Estimator</Link>
+          </li>
+          <li>
+            <Link to="/Wood">Wood</Link>
+          </li>
+          <li>
+            <Link to="/Detail">Detail</Link>
+          </li>
+        </ul>
+      </nav>
+      <Routes>
+        <Route path="/" element={<Estimator />}></Route>
+        <Route path="/Wood" element={<Wood />}></Route>
+        <Route path="/Detail" element={<Detail />}></Route>
+      </Routes>
     </div>
   );
 }
-
-export default App;

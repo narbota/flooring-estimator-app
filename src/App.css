@@ -1,7 +1,10 @@
 .App {
   text-align: center;
+  list-style-type: none;
 }
-
+li {
+  list-style: none;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
