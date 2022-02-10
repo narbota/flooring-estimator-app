@@ -1,11 +1,5 @@
-import React, { useState } from 'react';
-import {
-  Routes,
-  Route,
-  Link,
-  useRouteMatch,
-  useParams,
-} from 'react-router-dom';
+import React from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import Detail from './Detail';
 import Estimator from './Estimator';

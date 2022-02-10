@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Estimator() {
-  const [noOfRooms, setNoOfRooms] = useState({ value: 0 });
+  const [noOfRooms, setNoOfRooms] = useState({ value: '' });
 
   const navigate = useNavigate();
   const toWoodComponent = () => {

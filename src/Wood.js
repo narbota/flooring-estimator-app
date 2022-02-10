@@ -1,77 +1,115 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { floorList } from './Constants';
 
 export default function Wood(props) {
-  const [roomList, setRoomListTo] = useState({
-    id: '',
-    name: '',
-    sqft: '',
-    floorType: '',
-  });
+  const [roomList, setRoomListTo] = useState([]);
 
   const {
     state: { noOfRooms },
   } = useLocation();
 
   useEffect(() => {
-    let newRoomList = {};
+    let newRoomList = [];
 
     for (let i = 0; i < noOfRooms; i++) {
-      newRoomList[i] = {
+      newRoomList.push({
         id: i,
         name: '',
         sqft: '',
         floorType: '',
-      };
+      });
     }
     setRoomListTo(newRoomList);
   }, [noOfRooms]);
-  const refContainer = useRef(null);
-  return Object.keys(roomList).map((key) => {
-    const room = roomList[key];
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      console.log(refContainer.current.value);
-    };
-    return (
-      <>
-        <form onSubmit={handleSubmit} key={key}>
-          <div>
-            <input
-              ref={refContainer}
-              type="text"
-              name="room_name"
-              value={room.name}
-              onChange={(e) => {
-                setRoomListTo({
-                  ...roomList,
-                  name: e.target.name,
-                });
-              }}
-            />
-            <input
-              type="text"
-              name="sqft"
-              value={room.sqft}
-              onChange={(e) => {
-                setRoomListTo({
-                  ...roomList,
-                  sqft: e.target.value,
-                });
-              }}
-            />
-            <select name="floor_type" id="floor_type">
-              <option value="tile">tile</option>
-              <option value="carpet">carpet</option>
-              <option value="hardwood">hardwood</option>
-              <option value="vinyl">vinyl</option>
-            </select>
-            <button type="submit">Get Subtotal</button>
-          </div>
-        </form>
-      </>
-    );
-  });
+
+  const navigate = useNavigate();
+  const toDetailComponent = () => {
+    navigate('/Detail', { state: { roomList } });
+  };
+
+  return (
+    <>
+      {roomList.map((room) => {
+        console.log(room);
+
+        return (
+          <>
+            <div style={{ margin: '1rem', padding: '5px' }}>
+              <label>Room Name:</label>
+              <input
+                type="text"
+                name="room_name"
+                value={room.name}
+                onChange={(e) => {
+                  setRoomListTo(
+                    roomList.map((nestedRoom) => {
+                      if (nestedRoom.id === room.id) {
+                        return {
+                          ...nestedRoom,
+                          name: e.target.value,
+                        };
+                      }
+                      return nestedRoom;
+                    })
+                  );
+                }}
+              />
+              <br />
+              <label>Square Feet</label>
+              <input
+                type="text"
+                name="sqft"
+                value={room.sqft}
+                onChange={(e) => {
+                  setRoomListTo(
+                    roomList.map((nestedRoom) => {
+                      if (nestedRoom.id === room.id) {
+                        return {
+                          ...nestedRoom,
+                          sqft: e.target.value,
+                        };
+                      }
+                      return nestedRoom;
+                    })
+                  );
+                }}
+              />
+              <br />
+              <label>Floor Type</label>
+              <select
+                name="floor_type"
+                id="floor_type"
+                onChange={(e) => {
+                  setRoomListTo(
+                    roomList.map((nestedRoom) => {
+                      if (nestedRoom.id === room.id) {
+                        return {
+                          ...nestedRoom,
+                          floorType: e.target.value,
+                          unitPrice: floorList.filter(
+                            (floor) => floor.type === e.target.value
+                          )[0].price,
+                        };
+                      }
+                      return nestedRoom;
+                    })
+                  );
+                }}
+              >
+                {floorList.map((floor) => {
+                  return <option value={floor.type}>{floor.type}</option>;
+                })}
+              </select>
+            </div>
+          </>
+        );
+      })}
+      <button type="submit" onClick={toDetailComponent}>
+        Quote
+      </button>
+    </>
+  );
 }
 
 // <input
